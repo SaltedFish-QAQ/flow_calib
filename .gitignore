@@ -1,0 +1,5 @@
+src/user/gl_code/**
+.vscode/**
+prj/DebugConfig/**
+prj/Listings/**
+prj/Objects/**
