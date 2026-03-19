@@ -15,7 +15,7 @@
     - **Note**：**请使用keil 5版本编译此工程并且选择编译器为acc6而非acc5**
 - **2、依赖包**  
     本工程依赖rtthread nano版本，github链接如下  
-    [rtthread nano](https://github.com/RT-Thread/rtthread-nano)
+    [rtthread nano](https://github.com/RT-Thread/rtthread-nano)  
     keil下移植与安装教程如下  
     [在mdk上使用rtthread nano](https://www.rt-thread.org/document/site/#/rt-thread-version/rt-thread-nano/nano-port-keil/an0039-nano-port-keil?id=%e6%b7%bb%e5%8a%a0-rt-thread-nano-%e5%88%b0%e5%b7%a5%e7%a8%8b)  
     
