@@ -5,7 +5,7 @@
     本工程使用的编译环境以及设置如下
     | 名称 | 版本 |
     |------|------|
-    | keil | 5.43.0.0 |
+    | keil | 5.43 |
     | c complier | 6.24 |
     | assembler | 6.24 |
     | linker/locator | 6.24 |
@@ -16,10 +16,25 @@
 - **2、依赖包**  
     本工程依赖rtthread nano版本，github链接如下  
     [rtthread nano](https://github.com/RT-Thread/rtthread-nano)  
-    keil下移植与安装教程如下  
-    [在mdk上使用rtthread nano](https://www.rt-thread.org/document/site/#/rt-thread-version/rt-thread-nano/nano-port-keil/an0039-nano-port-keil?id=%e6%b7%bb%e5%8a%a0-rt-thread-nano-%e5%88%b0%e5%b7%a5%e7%a8%8b)  
-    
-    rtthread nano的版本为3.15 2021-06-17发布，使用最新版应该也无影响
+
+    本工程使用的软件包如下
+    | 名称 | 版本 |
+    |------|------|
+    | RT-Thread nano | 4.1.1 |
+    | CmBacktrace | 1.4.1 |
+    - **1、rt thead nano**  
+    rt thread nano中需要关注的是bsp文件夹下面的rtconfig.h中的相关配置，其中设置main函数线程的线程栈大小RT_MAIN_THREAD_STACK_SIZE需要设置为512，否则会引发硬件异常  
+    board.c文件中包含与硬件配置以及rt thread nano不同配置下的初始化等流程相关  
+    - **2、finsh组件**  
+    rt thread nano finsh组件进行了部分调整与修改，加入了finsh_config.h文件。  
+    finsh_config.h源文件文件目录  src\rt_thread_nano\rt-thread\bsp\stm32f407-msh\Middlewares\Third_Party\RealThread_RTOS\components\finsh  
+    - **3、CmBacktrace组件**  
+    本组件是用于在硬件异常的情况下进行问题排查的，使用本组件包需要将工程中的对应文件加入编译，并且开启RT_DEBUG宏  
+    RT_DEBUG宏位置在rtconfig.h中的37行，注意请不要打开本组件配置文件中的中文选项，会造成乱码
+
+
+
+
 ## 文件目录
 ```text
 
@@ -37,6 +52,19 @@
 │   └── flow_calib.uvprojx                      # 工程文件
 ├── src/                                        # 代码文件夹
 │   ├── cmsis                                   # cmsis文件与stm32启动有关
+│   ├── lib                                     # 使用的第三方库
+│   │   └── CmBacktrace-1.4.1/                  # 追踪硬件异常的库
+│   ├── rt_thread_nano/                         # rt thread nano 文件
+│   │   └── rt-thread/                          # rt thread nano 文件
+│   │       ├── bsp                             # rt thread nano bsp层文件
+│   │       │   ├── ...                         
+│   │       │   ├── board.c                     # 与自身工程配置与硬件配置相关的移植接口文件
+│   │       │   └── rtconfig.h                  # rt thread nano配置文件
+│   │       ├── components/                     # rt thread nano组件库文件
+│   │       │   └── finsh                       # rt thread nano finsh组件文件
+│   │       ├── ...                             
+│   │       └── src                             # 核心代码文件
+│   ├── rt_thread_nano                          # rt thread nano 文件
 │   ├── stm32_lib                               # stm32库文件
 │   └── user/                                   # 用户代码文件E:\a_workplace\1\1\flow_calib\work_code\prj\Objects
 │       ├── bsp/                                # 底层与传感器无关驱动
@@ -64,6 +92,6 @@
 - [x] 一次标定以及修正标定算法
 - [x] 软件多实例iic编写
 - [x] 传感器驱动移植
+- [x] finsh移植
 - [ ] 重构iic模块
-- [ ] finsh移植
 - [ ] 增加命令行与交互

@@ -1,5 +1,6 @@
 #include <rtthread.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "stm32f10x.h"
 #include "thread_config.h"
 
@@ -25,6 +26,7 @@ void hello(void)
 MSH_CMD_EXPORT(hello, say hello to RT-Thread nano);
 
 float test_float1, test_float2;
+char msh_buff[256];
 void set_float(int argc, char **argv)
 {
     if (argc < 3)
@@ -35,13 +37,15 @@ void set_float(int argc, char **argv)
     
     test_float1 = atof(argv[1]);
     test_float2 = atof(argv[2]);
-    rt_kprintf("the input parameters is %.2f, %.2f\r\n", test_float1, test_float2);
+    sprintf(msh_buff, "the input parameters is %.2f, %.2f\r\n", test_float1, test_float2);
+    rt_kprintf(msh_buff);
 }
 MSH_CMD_EXPORT(set_float, input float parameters);
 
 void get_float(void)
 {
-    rt_kprintf("the float parameters is %.2f, %.2f\r\n", test_float1, test_float2);
+    sprintf(msh_buff, "the float parameters is %.2f, %.2f\r\n", test_float1, test_float2);
+    rt_kprintf(msh_buff);
 }
 MSH_CMD_EXPORT(get_float, output float parameters);
 

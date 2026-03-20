@@ -159,7 +159,7 @@
           <Type>0</Type>
           <LineNumber>10</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134231190</Address>
+          <Address>134231382</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -169,38 +169,6 @@
           <Filename>..\src\user\flow_calib.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression>\\flow_calib\../src/user/flow_calib.c\10</Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>44</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134231236</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\src\user\main.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\flow_calib\../src/user/main.c\44</Expression>
-        </Bp>
-        <Bp>
-          <Number>2</Number>
-          <Type>0</Type>
-          <LineNumber>30</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134245692</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\src\user\main.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\flow_calib\../src/user/main.c\30</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -238,6 +206,11 @@
           <count>6</count>
           <WinNumber>1</WinNumber>
           <ItemText>test_float2</ItemText>
+        </Ww>
+        <Ww>
+          <count>7</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>msh_buff</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>
