@@ -84,7 +84,8 @@
 │       ├── main.c                              # 主函数， 运行了一个pc13的运行指示灯，运行周期为1Hz
 │       ├── stm32f10x...                        # stm32相关文件
 │       └── thread_config.h                     # 工程中的线程配置文件
-└── readme.md
+├── cmd_use.txt                                 # msh交互命令使用说明
+└── readme.md                                   # read me
 ```
 
 ## todo list
