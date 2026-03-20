@@ -1,0 +1,44 @@
+修改一阶滤波参数
+set_filter cmd value
+set_filter	设置命令
+cmd	参数序号，具体会在get_filter命令中给出
+value	参数
+
+获取一阶滤波参数
+get_filter
+
+设置标定参数
+set_calib index adc val
+set_calib 	设置命令
+index	需要设置的标定参数序号，0-9
+adc	标定使用原始电参量
+val	标定使用流速电参量
+
+获取标定参数
+get_calib
+
+设置修正参数
+set_corr k b
+set_corr	设置命令
+k	修正系数
+b	偏移量
+
+获取修正参数
+get_corr
+
+重新设置所有标定，修正参数为原始值
+reset_para
+
+测量值
+flow_value_with_filter		经过一阶滤波算法之后的测量值
+flow_value_without_filter		不使用一阶滤波算法的测量值
+flow_value_use_original_sensor_value	直接使用原始传感器值得测量值
+
+显示测量值
+show_value
+
+开始打印测量值
+printf_start
+
+停止打印测量值
+printf_stop
