@@ -77,22 +77,6 @@ void DebugMon_Handler(void)
 //     }
 // }
 
-void USART1_IRQHandler(void)
-{
-    rt_interrupt_enter();
-
-
-    rt_interrupt_leave();
-}
-
-void USART2_IRQHandler(void)
-{
-    rt_interrupt_enter();
-
-
-    rt_interrupt_leave();
-}
-
 /******************************************************************************/
 /*                 STM32F10x Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
