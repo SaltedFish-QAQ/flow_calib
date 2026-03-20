@@ -44,11 +44,11 @@ float first_older_filter_measure_data_append(first_order_filter_t *para)
         para->filter_data_new->filter_data_new = para->measure_data;
         para->filter_data_new->filter_coefficient_last = para->filter_para->filter_coefficient_org_value;
         new_sub_old = para->filter_data_new->filter_data_new - para->filter_data_new->filter_data_old;
-        if (new_sub_old > 0 && fabs(new_sub_old) > 0.0001)
+        if (new_sub_old > 0 && fabs(new_sub_old) > para->filter_para->fliter_dir_value)
         {
             para->filter_data_new->filter_data_add_or_dec = 1;
         }
-        else if (new_sub_old < 0 && fabs(new_sub_old) > 0.0001)
+        else if (new_sub_old < 0 && fabs(new_sub_old) > para->filter_para->fliter_dir_value)
         {
             para->filter_data_new->filter_data_add_or_dec = 2;
         }
@@ -102,13 +102,10 @@ static float first_order_filter_computation_result(first_order_filter_t *para)
             
             if (para->filter_damping_counter >= para->filter_para->filter_damping_max_value)
             {
+                para->filter_data_new->filter_coefficient_last = para->filter_data_old->filter_coefficient_last + para->filter_para->filter_coefficient_add_value;
                 if (para->filter_data_new->filter_coefficient_last >= para->filter_para->filter_coefficient_max_value)
                 {
                     para->filter_data_new->filter_coefficient_last = para->filter_para->filter_coefficient_max_value;
-                }
-                else
-                {
-                    para->filter_data_new->filter_coefficient_last = para->filter_data_old->filter_coefficient_last + para->filter_para->filter_coefficient_add_value;
                 }
                 para->filter_damping_counter = 0;
             }

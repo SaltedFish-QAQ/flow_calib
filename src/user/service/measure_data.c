@@ -39,15 +39,17 @@ static measure_data_t flow_measure_data =
 //绝对温度
 #define ABSOLUTETEMPERATURE(a)      (a + 273.15)
 // 标准大气压
-#define STANDARD_ATMOSPHERIC        101、325
+#define STANDARD_ATMOSPHERIC        101.325
+#define SLIP_FILTER_NUM             5
 
 void measure_flow_init(void)
 {
     xgzp6818d_init();
 
-    flow_filter_para.filter_damping_acc_value = 2;                  /* 消抖计数加速反应阀值*/
-    flow_filter_para.filter_damping_max_value = 5;                  /* 消抖计数最大值(此常量影响滤波的灵敏度)*/
-    flow_filter_para.filter_coefficient_add_value = 255;             /* 滤波系数增量(此常量影响滤波的灵敏度)*/
+    flow_filter_para.filter_damping_acc_value = 0.01;                  /* 消抖计数加速反应阀值*/
+    flow_filter_para.fliter_dir_value = 0.001;                  /* 消抖计数加速反应阀值*/
+    flow_filter_para.filter_damping_max_value = 1;                  /* 消抖计数最大值(此常量影响滤波的灵敏度)*/
+    flow_filter_para.filter_coefficient_add_value = 50;             /* 滤波系数增量(此常量影响滤波的灵敏度)*/
     flow_filter_para.filter_coefficient_max_value = 255;            /* 滤波系数最大值(此常量影响滤波的灵敏度)*/
     flow_filter_para.filter_coefficient_org_value = 0;              /* 滤波系数初始值 */
     flow_filter_para.filter_coefficient_variation_or_not = 0;       /* 滤波系数是否不变 0：动态变化 1：固定不变*/
@@ -60,7 +62,7 @@ void measure_flow_init(void)
 
 void measure_flow_measure(measure_data_t *flow_data)
 {
-    static float pressure_array[25] = {0}, temp_array[25] = {0};
+    static float pressure_array[SLIP_FILTER_NUM] = {0}, temp_array[SLIP_FILTER_NUM] = {0};
     static uint8_t array_index = 0;
     float perssure_temp = 0, tempewrature_temp = 0;
     float pressure_use_to_calculater = 0;
@@ -83,14 +85,16 @@ void measure_flow_measure(measure_data_t *flow_data)
     temp_array[array_index] = tempewrature_temp;
     array_index++;
     
-    flow_data->average_perssure = average_float(pressure_array, array_index);
-    flow_data->average_temp = average_float(temp_array, array_index);
+    // flow_data->average_perssure = average_float(pressure_array, array_index);
+    // flow_data->average_temp = average_float(temp_array, array_index);
+    flow_data->average_perssure = perssure_temp;
+    flow_data->average_temp = tempewrature_temp;
 
-    if (array_index >= 25)
+    if (array_index >= SLIP_FILTER_NUM)
     {
-        memmove(&pressure_array[0], &pressure_array[1], 24 * 4);
-        memmove(&temp_array[0], &temp_array[1], 24 * 4);
-        array_index = 24;
+        memmove(&pressure_array[0], &pressure_array[1], SLIP_FILTER_NUM * 4);
+        memmove(&temp_array[0], &temp_array[1], SLIP_FILTER_NUM * 4);
+        array_index = SLIP_FILTER_NUM;
     }
 
     flow_data->flow_sub_zero = flow_data->average_perssure - flow_data->flow_zero;
@@ -113,7 +117,7 @@ void measure_flow_measure(measure_data_t *flow_data)
 
     calib_data_calib(flow_data->flow_calib_data, 10, flow_data->flow_before_calib, &flow_data->flow_after_calib);
     calib_data_correction(&flow_data->flow_correction_data, flow_data->flow_after_calib, &flow_data->flow_correction);
-    flow_data->flow_value = flow_data->flow_correction;
+    flow_data->flow_value = flow_data->flow_correction / 100;
 
     flow_value_sub_zero_debug = flow_data->flow_value;
     flow_value_debug = sqrtf((2 * fabs(flow_data->average_perssure)) / 1.293);
@@ -122,6 +126,8 @@ void measure_flow_measure(measure_data_t *flow_data)
 void measure_blance_start(uint8_t start_flag)
 {
     blance.blance_flag = start_flag;
+    blance.blance_tick = 0;
+    memset(blance.blance_buffer, 0, 30 * 4);
     blance_ticks = rt_tick_get();
 }
 
@@ -144,20 +150,14 @@ void measure_flow_hadnler(void)
     measure_flow_measure(&flow_measure_data);
     if (blance.blance_flag != 0)
     {
-        int i = 0;
-        for (i = 0; i < 30;)
+        if (rt_tick_get() - blance_ticks >= 1000)
         {
-            if (rt_tick_get() - blance_ticks >= 1000)
-            {
-                measure_flow_set_zero(&flow_measure_data.flow_zero, flow_measure_data.average_perssure, &blance);
-                blance_ticks = rt_tick_get();
-                i++;
-            }
-            else
-            {
-                break;
-            }
+            measure_flow_set_zero(&flow_measure_data.flow_zero, flow_measure_data.average_perssure, &blance);
+            blance_ticks = rt_tick_get();
         }
     }
-    
 }
+
+/****************** 用于msh的设置与展示命令 ****************************/
+
+

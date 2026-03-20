@@ -2,6 +2,7 @@
 #define _BSP_IIC_H_
 
 #include <stdint.h>
+#include "stm32f10x.h"
 
 #define BSP_IIC_DELAY_MS    50
 
@@ -13,20 +14,20 @@ typedef enum
     iic_no_ack,
 }bsp_iic_status_e;
 
-typedef void(*gpio_init)(void);
-typedef void(*gpio_set)(uint8_t);
-typedef uint8_t(*gpio_get)(void);
-typedef void(*delay_func)(uint32_t);
+typedef struct
+{
+    uint32_t        clk;
+    GPIO_TypeDef    *port;
+    uint16_t        pin;
+}iic_gpio_obj_t;
+
 
 typedef struct
 {
-    gpio_init   iic_init;           // 初始化iic的gpio端口
-    gpio_set    iic_scl_set;        // scl 置位函数， 0 低电平， 1 高电平
-    gpio_set    iic_sda_set;        // sda 置位函数， 0 低电平， 1 高电平
-    gpio_get    iic_sda_get;        // sda 读取函数， 0 高电平， 1 低电平
-    delay_func  iic_delay_func;     // iic延时函数，可使用for循环空跑替代
-    uint32_t    iic_delay_ms;       // iic延时参数，可使用宏定义BSP_IIC_DELAY_MS(50)
+    iic_gpio_obj_t scl;
+    iic_gpio_obj_t sda;
 }bsp_iic_obj_t;
+
 
 bsp_iic_status_e bsp_iic_init(bsp_iic_obj_t *para);
 

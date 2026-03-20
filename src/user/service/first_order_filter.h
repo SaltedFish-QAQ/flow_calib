@@ -21,6 +21,7 @@
 typedef struct
 {
     float       filter_damping_acc_value;                   /* 消抖计数加速反应阀值*/
+    float       fliter_dir_value;                           /* 用于判断是否属于数据变化的阀值，小于此值的变化视为没有变化 */
     uint8_t     filter_damping_max_value;                   /* 消抖计数最大值(此常量影响滤波的灵敏度)*/
     uint8_t     filter_coefficient_add_value;               /* 滤波系数增量(此常量影响滤波的灵敏度)*/
     uint8_t     filter_coefficient_max_value;               /* 滤波系数最大值(此常量影响滤波的灵敏度)*/

@@ -1,6 +1,8 @@
 #include "XGZP6818D.h"
-#include "bsp_iic.h"
 #include "stm32f10x_gpio.h"
+#include "stm32f10x_rcc.h"
+#include "bsp_iic.h"
+#include "bsp_delay.h"
 #include <math.h>
 
 #define XGZ6818D_ADDRESS        0x58
@@ -8,20 +10,20 @@
 #define PMIN  -500.0
 #define PMAX  500.0
 
+static void xgzp6818d_iic_init(void);
+static void xgzp6818d_iic_scl_set(uint8_t para);
+static void xgzp6818d_iic_sda_set(uint8_t para);
+static uint8_t xgzp6818d_iic_sda_get(void);
+static void xgzp6818d_iic_delay_func(uint32_t para);
+
 bsp_iic_obj_t xgzp6818d_obj = 
 {
-    .scl = 
-    {
-        .clk = RCC_APB2Periph_GPIOB,
-        .port = GPIOB,
-        .pin = GPIO_Pin_6,
-    },
-    .sda = 
-    {
-        .clk = RCC_APB2Periph_GPIOB,
-        .port = GPIOB,
-        .pin = GPIO_Pin_7,
-    },
+    .iic_init = xgzp6818d_iic_init,
+    .iic_scl_set = xgzp6818d_iic_scl_set,
+    .iic_sda_set = xgzp6818d_iic_sda_set,
+    .iic_sda_get = xgzp6818d_iic_sda_get,
+    .iic_delay_func = xgzp6818d_iic_delay_func,
+    .iic_delay_ms = BSP_IIC_DELAY_MS,
 };
 
 uint8_t xgzp6818d_init(void)
@@ -88,3 +90,59 @@ uint8_t xgzp6818d_read(float *pressure, float *temp)
     return DATA_READ_SUCCESS;
 }
 
+static void xgzp6818d_iic_init(void)
+{
+    GPIO_InitTypeDef GPIO_InitStructure;
+
+    GPIO_StructInit(&GPIO_InitStructure);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+
+    // 初始化当前对象
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_OD; // 开漏输出
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; // 50MHz
+    GPIO_Init(GPIOB, &GPIO_InitStructure); // 初始化GPIO
+
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; // 开漏输出
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; // 50MHz
+    GPIO_Init(GPIOB, &GPIO_InitStructure); // 初始化GPIO
+
+    GPIO_SetBits(GPIOB, GPIO_Pin_7);
+    GPIO_SetBits(GPIOB, GPIO_Pin_6);
+}
+
+static void xgzp6818d_iic_scl_set(uint8_t para)
+{
+    if (para == 0)
+    {
+        GPIO_ResetBits(GPIOB, GPIO_Pin_6);
+    }
+    else if (para == 1)
+    {
+        GPIO_SetBits(GPIOB, GPIO_Pin_6);
+    }
+    
+}
+
+static void xgzp6818d_iic_sda_set(uint8_t para)
+{
+    if (para == 0)
+    {
+        GPIO_ResetBits(GPIOB, GPIO_Pin_7);
+    }
+    else if (para == 1)
+    {
+        GPIO_SetBits(GPIOB, GPIO_Pin_7);
+    }
+}
+
+static uint8_t xgzp6818d_iic_sda_get(void)
+{
+    return GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_7);
+}
+
+static void xgzp6818d_iic_delay_func(uint32_t para)
+{
+    bsp_delay_ms(para);
+}
