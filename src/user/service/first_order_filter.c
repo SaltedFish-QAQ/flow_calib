@@ -100,7 +100,7 @@ static float first_order_filter_computation_result(first_order_filter_t *para)
                 _data_add_with_boundary_judgment(&para->filter_damping_counter, 0xff);
             }
             
-            if (para->filter_damping_counter >= para->filter_para->filter_damping_max_value)
+            if (para->filter_damping_counter >= para->filter_para->filter_damping_counter_max_value)
             {
                 para->filter_data_new->filter_coefficient_last = para->filter_data_old->filter_coefficient_last + para->filter_para->filter_coefficient_add_value;
                 if (para->filter_data_new->filter_coefficient_last >= para->filter_para->filter_coefficient_max_value)

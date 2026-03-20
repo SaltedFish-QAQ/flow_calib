@@ -49,6 +49,11 @@ void get_float(void)
 }
 MSH_CMD_EXPORT(get_float, output float parameters);
 
+extern float flow_value_use_original_sensor_value;
+extern float flow_value_with_filter;
+extern float flow_value_without_filter;
+extern uint8_t printf_value_flag;
+
 int main(void)
 {
     gpio_init();
@@ -57,6 +62,16 @@ int main(void)
 
     while (1)
     {
+        if (printf_value_flag == 1)
+        {
+            sprintf(msh_buff, "flow_value_with_filter:                  %f\r\n", flow_value_with_filter);
+            rt_kprintf(msh_buff);
+            sprintf(msh_buff, "flow_value_without_filter:               %f\r\n", flow_value_without_filter);
+            rt_kprintf(msh_buff);
+            sprintf(msh_buff, "flow_value_use_original_sensor_value:    %f\r\n", flow_value_use_original_sensor_value);
+            rt_kprintf(msh_buff);
+        }
+        
         GPIO_SetBits(GPIOC, GPIO_Pin_13);
         rt_thread_mdelay(500);
         GPIO_ResetBits(GPIOC, GPIO_Pin_13);
