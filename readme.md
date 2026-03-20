@@ -71,8 +71,6 @@
 │       │   ├── bsp_delay.c                     # 用于iic等通信中的等待延时文件，实现方式与rtos无关
 │       │   └── bsp_iic.c                       # 多实例软件模拟iic驱动
 │       ├── components/                         # 组件文件夹
-│       │   ├── mm_fifo.c                       # fifo文件，采用别人写的库，建议采用本程序中的版本
-│       │   │                                   # 库地址：https://github.com/meng-plus/mm_fifo
 │       │   └── sf_lib.c                        # 通用函数文件
 │       ├── device/                             # 驱动文件夹
 │       │   └── XGZP6818D.c                     # 差压传感器驱动
@@ -94,5 +92,5 @@
 - [x] 软件多实例iic编写
 - [x] 传感器驱动移植
 - [x] finsh移植
-- [ ] 重构iic模块
-- [ ] 增加命令行与交互
+- [x] 重构iic模块
+- [x] 增加命令行与交互
